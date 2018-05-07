@@ -20,8 +20,8 @@ func FindById(s *mgo.Session) func(w http.ResponseWriter, r *http.Request) {
 		var resDetails ResumeDetails
 		err :=  c.Find(bson.M{"id":id}).One(&resDetails)
 		if err != nil  {
-			ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
-			log.Println("Failed to find Candidate: ", err)
+			ErrorWithJSON(w, "Unable to get the candidate details :"+id, http.StatusInternalServerError)
+			log.Println("Unable to get the candidate details : "+id, err)
 			return
 		}
 		if resDetails.Id == "" {

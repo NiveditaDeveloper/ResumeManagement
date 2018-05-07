@@ -29,7 +29,7 @@ type ResumeDetails struct {
 func ErrorWithJSON(w http.ResponseWriter, message string, code int) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(code)
-    w.Write([]byte(message))
+   	w.Write([]byte(message))
 	log.Println(w, message)
 }
 

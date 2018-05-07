@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//Display all the values
+//Display all the values; values will be displayed in an UI grid structure, paginated as per the number of records (in process)
 func DisplayResume(s *mgo.Session) func(w http.ResponseWriter, r *http.Request){
 	return func(w http.ResponseWriter, r *http.Request) {
 		session := s.Copy()
@@ -19,7 +19,7 @@ func DisplayResume(s *mgo.Session) func(w http.ResponseWriter, r *http.Request){
 		err := c.Find(bson.M{}).All(&resDetails)
 		if err!=nil{
 			ErrorWithJSON(w, "Database error", http.StatusInternalServerError)
-			log.Println("Failed get all resumes: ", err)
+			log.Println("Failed to fetch resumes: ", err)
 			return
 		}
 		respBody, err := json.MarshalIndent(resDetails, "", "  ")
@@ -51,7 +51,6 @@ func AddResume (s *mgo.Session) func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Location", r.URL.Path+"/"+resDetails.Id)
 		w.WriteHeader(http.StatusCreated)
-
 	}
 }
 
@@ -78,7 +77,7 @@ func UpdateResume(s *mgo.Session) func(w http.ResponseWriter, r *http.Request) {
 				log.Println("Failed to update Candidate Details: ", err)
 				return
 			case mgo.ErrNotFound:
-				ErrorWithJSON(w, "Candidate not found", http.StatusNotFound)
+				ErrorWithJSON(w, "Candidate not found: "+id, http.StatusNotFound)
 				return
 			}
 		}
@@ -103,7 +102,7 @@ func DeleteResume(s *mgo.Session)  func(w http.ResponseWriter, r *http.Request) 
 				log.Println("Failed to delete Candidate Details: ", err)
 				return
 			case mgo.ErrNotFound:
-				ErrorWithJSON(w, "Candidate Details not found", http.StatusNotFound)
+				ErrorWithJSON(w, "Candidate Details not found : "+id, http.StatusNotFound)
 				return
 			}
 		}

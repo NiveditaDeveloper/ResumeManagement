@@ -24,10 +24,6 @@ func FindById(s *mgo.Session) func(w http.ResponseWriter, r *http.Request) {
 			log.Println("Unable to get the candidate details : "+id, err)
 			return
 		}
-		if resDetails.Id == "" {
-			ErrorWithJSON(w, "Id not found", http.StatusNotFound)
-			return
-		}
 		respBody, err := json.MarshalIndent(resDetails, "", "  ")
 		if err != nil {
 			log.Fatal(err)
